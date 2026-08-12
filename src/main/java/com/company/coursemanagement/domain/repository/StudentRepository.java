@@ -10,4 +10,6 @@ public interface StudentRepository {
     List<Student> findAll();
     void deleteById(Long id);
     boolean existsById(Long id);
+    boolean existsByEmail(String email);
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
 }

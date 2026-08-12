@@ -38,4 +38,22 @@ public class InMemoryStudentRepository implements StudentRepository {
     public boolean existsById(Long id) {
         return storage.containsKey(id);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        if (email == null) return false;
+        return storage.values().stream()
+                .anyMatch(student -> student.getEmail() != null
+                        && student.getEmail().equalsIgnoreCase(email.trim()));
+    }
+
+    @Override
+    public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
+        if (firstName == null || lastName == null) return false;
+        return storage.values().stream()
+                .anyMatch(student ->
+                        student.getFirstName() != null && student.getFirstName().equalsIgnoreCase(firstName.trim())
+                                && student.getLastName() != null && student.getLastName().equalsIgnoreCase(lastName.trim())
+                );
+    }
 }
