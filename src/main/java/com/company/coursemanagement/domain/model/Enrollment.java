@@ -1,12 +1,37 @@
 package com.company.coursemanagement.domain.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "enrollments",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "course_id"}))
 public class Enrollment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "student_id", nullable = false)
     private Long studentId;
+
+    @Column(name = "course_id", nullable = false)
     private Long courseId;
+
+    @Column(name = "enrollment_date", nullable = false)
     private LocalDate enrollmentDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private EnrollmentStatus status;
 
     public Enrollment() {

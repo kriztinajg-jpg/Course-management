@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: course-management
+  datasource:
+    url: jdbc:mysql://localhost:3306/course_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: course_app
+    password: CourseApp2025!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
