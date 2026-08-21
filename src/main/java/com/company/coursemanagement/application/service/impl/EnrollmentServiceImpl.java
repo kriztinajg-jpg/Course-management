@@ -9,6 +9,7 @@ import com.company.coursemanagement.domain.exception.StudentNotFoundException;
 import com.company.coursemanagement.domain.model.Course;
 import com.company.coursemanagement.domain.model.Enrollment;
 import com.company.coursemanagement.domain.model.EnrollmentStatus;
+import com.company.coursemanagement.domain.model.Student;
 import com.company.coursemanagement.domain.repository.CourseRepository;
 import com.company.coursemanagement.domain.repository.EnrollmentRepository;
 import com.company.coursemanagement.domain.repository.StudentRepository;
@@ -30,9 +31,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public EnrollmentDTO enrollStudent(Long studentId, Long courseId) {
-        if (!studentRepository.existsById(studentId)) {
-            throw new StudentNotFoundException(studentId);
-        }
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new StudentNotFoundException(studentId));
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new CourseNotFoundException(courseId));
@@ -42,7 +42,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             throw new BusinessException("El curso ha alcanzado su capacidad máxima (" + course.getMaxCapacity() + ")");
         }
 
-        Enrollment enrollment = new Enrollment(null, studentId, courseId, LocalDate.now(), EnrollmentStatus.ACTIVE);
+        Enrollment enrollment = new Enrollment(null, student, course, LocalDate.now(), EnrollmentStatus.ACTIVE);
         Enrollment saved = enrollmentRepository.save(enrollment);
         return toDTO(saved);
     }
