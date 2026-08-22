@@ -13,10 +13,12 @@ import com.company.coursemanagement.domain.model.Student;
 import com.company.coursemanagement.domain.repository.CourseRepository;
 import com.company.coursemanagement.domain.repository.EnrollmentRepository;
 import com.company.coursemanagement.domain.repository.StudentRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Service
 public class EnrollmentServiceImpl implements EnrollmentService {
 
     private final EnrollmentRepository enrollmentRepository;
@@ -31,6 +33,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public EnrollmentDTO enrollStudent(Long studentId, Long courseId) {
+        if (studentId == null) {
+            throw new IllegalArgumentException("El id del estudiante es obligatorio.");
+        }
+        if (courseId == null) {
+            throw new IllegalArgumentException("El id del curso es obligatorio.");
+        }
+
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new StudentNotFoundException(studentId));
 

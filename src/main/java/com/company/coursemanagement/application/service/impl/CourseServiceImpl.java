@@ -5,9 +5,11 @@ import com.company.coursemanagement.application.service.CourseService;
 import com.company.coursemanagement.domain.exception.CourseNotFoundException;
 import com.company.coursemanagement.domain.model.Course;
 import com.company.coursemanagement.domain.repository.CourseRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
@@ -18,6 +20,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CourseDTO create(CourseDTO dto) {
+        validateNullOrEmptyFields(dto);
         Course course = new Course(dto.getId(), dto.getCode(), dto.getName(), dto.getDescription(), dto.getMaxCapacity());
         Course saved = courseRepository.save(course);
         return toDTO(saved);
@@ -42,6 +45,7 @@ public class CourseServiceImpl implements CourseService {
         if (!courseRepository.existsById(id)) {
             throw new CourseNotFoundException(id);
         }
+        validateNullOrEmptyFields(dto);
         Course course = new Course(id, dto.getCode(), dto.getName(), dto.getDescription(), dto.getMaxCapacity());
         Course updated = courseRepository.save(course);
         return toDTO(updated);
@@ -53,6 +57,21 @@ public class CourseServiceImpl implements CourseService {
             throw new CourseNotFoundException(id);
         }
         courseRepository.deleteById(id);
+    }
+
+    private void validateNullOrEmptyFields(CourseDTO dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("Los datos del curso no pueden ser nulos.");
+        }
+        if (dto.getCode() == null || dto.getCode().isBlank()) {
+            throw new IllegalArgumentException("El código del curso es obligatorio.");
+        }
+        if (dto.getName() == null || dto.getName().isBlank()) {
+            throw new IllegalArgumentException("El nombre del curso es obligatorio.");
+        }
+        if (dto.getMaxCapacity() == null) {
+            throw new IllegalArgumentException("La capacidad máxima es obligatoria.");
+        }
     }
 
     private CourseDTO toDTO(Course course) {
